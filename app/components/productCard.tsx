@@ -22,7 +22,6 @@ type ProductCardProps = {
 
 export default function ProductCard({ id, title, price, image, isSelected = false, onClick }: ProductCardProps) {
   return (
-    <Link href={`/product/${id}`} passHref style={{ textDecoration: 'none', cursor: 'pointer'}}>
       <Card onClick={onClick}
         sx={{
           height: '100%',
@@ -77,7 +76,6 @@ export default function ProductCard({ id, title, price, image, isSelected = fals
             </Typography>
           </CardContent>
         </CardActionArea>
-      </Card>
-    </Link>
+      </Card>    
   );
 }

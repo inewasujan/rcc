@@ -1,7 +1,8 @@
 'use client';
 
-import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useGetProductByIdQuery } from "@/app/lib/productsApi";
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useGetProductByIdQuery } from '@/app/lib/productsApi';
 import {
   Box,
   Button,
@@ -10,21 +11,25 @@ import {
   Typography,
   CircularProgress,
   Paper,
-} from "@mui/material";
+} from '@mui/material';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   const productId = parseInt(id as string, 10);
   const { data: product, error, isLoading } = useGetProductByIdQuery(productId);
 
-  const backPage = searchParams.get("page") || localStorage.getItem("currentPage") || "1";
-  const selected = searchParams.get("selected") || localStorage.getItem("selectedProductId") || "";
-  
-  // const backPage = searchParams.get("page") || sessionStorage.getItem("currentPage") || "1";
-  // const selected = searchParams.get("selected") || sessionStorage.getItem("selectedProductId") || "";
+  const [backPage, setBackPage] = useState('1');
+  const [selected, setSelected] = useState('');
+
+  // Read sessionStorage values in useEffect to avoid hydration mismatch
+  useEffect(() => {
+    const storedPage = sessionStorage.getItem('currentPage') || '1';
+    const storedSelected = sessionStorage.getItem('selectedProductId') || '';
+    setBackPage(storedPage);
+    setSelected(storedSelected);
+  }, []);
 
   if (isLoading) {
     return (
@@ -56,21 +61,21 @@ export default function ProductDetailPage() {
 
       <Paper elevation={3} sx={{ padding: 3 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={5}>
+          <Grid>
             <Box
               component="img"
               src={product.image}
               alt={product.title}
               sx={{
-                width: "100%",
+                width: '100%',
                 maxHeight: 400,
-                objectFit: "contain",
+                objectFit: 'contain',
                 borderRadius: 4,
               }}
             />
           </Grid>
 
-          <Grid item xs={12} md={7}>
+          <Grid>
             <Typography variant="h4" gutterBottom>
               {product.title}
             </Typography>
