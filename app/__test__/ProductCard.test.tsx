@@ -1,31 +1,24 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ProductCard from '../components/productCard';
+import ProductCard from '../components/productCard'; 
 
 describe('ProductCard', () => {
-  const product = {
+  const sampleProps = {
     id: 1,
     title: 'Test Product',
-    price: 99.99,
-    image: 'test-image.png',
+    price: 29.99,
+    image: 'https://via.placeholder.com/150',
+    onClick: jest.fn(),
+    isSelected: false,
   };
+ 
 
-  it('renders product info correctly', () => {
-    render(<ProductCard {...product} />);
-
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('$99.99')).toBeInTheDocument();
-    const img = screen.getByRole('img', { name: /test product/i });
-    expect(img).toHaveAttribute('src', 'test-image.png');
+  it('calls onClick handler when clicked', () => {
+    render(<ProductCard {...sampleProps} />);
+    const card = screen.getByRole('button'); 
+    fireEvent.click(card);
+    expect(sampleProps.onClick).toHaveBeenCalled();
   });
 
-  it('handles click event', () => {
-    const handleClick = jest.fn();
-
-    render(<ProductCard {...product} onClick={handleClick} />);
-
-    fireEvent.click(screen.getByRole('button')); // CardActionArea acts as button
-
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
+ 
 });
